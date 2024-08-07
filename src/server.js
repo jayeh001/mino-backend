@@ -25,8 +25,9 @@ fastify.register(cors, {
 });
 //SOCKET
 fastify.register(fastifySocketIO, {
+    transports: ["websocket","polling"],
     cors: {
-        origin: "http://localhost:3000",
+        origin: "*",
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     },
     connectionStateRecovery: {
@@ -36,7 +37,11 @@ fastify.register(fastifySocketIO, {
 })
 fastify.ready().then( ()=> {
     fastify.io.on("connection", (socket) => {
-        console.log("User connected: ", socket.id)
+        console.log("User connected! UserID: ", socket.handshake.auth)
+        socket.on("msg", (data) => {
+            console.log("data: ", data)
+        })
+
     })
 })
 

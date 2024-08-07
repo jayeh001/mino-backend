@@ -5,17 +5,17 @@ async function postEvent(fastify, payload){
     const isoDate = new Date(dateTime).toISOString();
     const client = await fastify.pg.connect();
     try {
+        //Insert into events table
         const query = `
       INSERT INTO events (owner, title, descr, posteddate, address, date)
       VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *
-    `;
+      RETURNING *`;
+        //Insert into attendance table
         const values = [owner, title, descr, isoPostedDate, location, isoDate];
         const {rows} = await client.query(query, values);
         const newQuery = `
         INSERT INTO attendance
-        VALUES ($1, $2)
-        `
+        VALUES ($1, $2)`
         const newValues = [rows[0].id, owner]//insert new event id into attendance with owner as attending
         await client.query(newQuery, newValues);
         return rows[0]

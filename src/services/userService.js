@@ -14,10 +14,8 @@ async function getUser(fastify, payload) {
             const sql = 'insert into users (userId, name) values ($1, $2) RETURNING *';
             const values = [userId, name];
             const {rows} = await client.query(sql, values)
-            console.log('INISIDE ROWS IS ', rows[0])
             return rows[0]
         }
-        console.log('afterwards row 0 is ', rows[0])
         return rows[0]
     } finally {
         client.release();
